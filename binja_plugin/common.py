@@ -26,7 +26,7 @@ def get_binary_data(bv: BinaryView) -> bytearray:
     sorted_section = sorted(sections, key=lambda s: s.start)
 
     br = BinaryReader(bv)
-    last_section_address = bv.original_base
+    last_section_address = bv.original_image_base
     exe_data = bytearray()
     for section in sorted_section:
         # Pad with zeroes
@@ -58,7 +58,7 @@ def create_miasm_context(arch: str, binary_base_address: int,
 def deobfuscate_addresses(bv: BinaryView, arch: str,
                           mutated_code_addresses: list[int]) -> None:
     binary_data = get_binary_data(bv)
-    miasm_ctx = create_miasm_context(arch, bv.original_base, binary_data)
+    miasm_ctx = create_miasm_context(arch, bv.original_image_base, binary_data)
 
     logger.log_info("Resolving mutated function(s)' address(es)...")
     mutated_func_addrs = unwrap_functions(miasm_ctx, mutated_code_addresses)
